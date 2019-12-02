@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+use App\Http\Requests;
+use App\Produk;
+
+class ProdukController extends Controller
+{
+    public function index(){
+        $data = Produk::all();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $productlist = collect($data);
+            $productlist->toJson();
+            return $productlist;
+        }
+        else{
+            $data = [
+                ['id' => null],
+            ];
+            $productlist = collect($data);
+            $productlist->toJson();
+            return $productlist;
+        }
+    }
+}
