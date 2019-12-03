@@ -25,8 +25,8 @@ class KeranjangController extends Controller
         }
 
         //Tampilkan Keranjang
-        $daftar = Keranjang::with('produk')->get();
-        $daftarkeranjang = $daftar->where('id_users',$iduser);
+        $daftarkeranjang = Keranjang::where('id_users',$iduser)->with('produk')->get();
+        //$daftarkeranjang = $daftar->where('id_users',$iduser);
         $jumlahkeranjang = $daftarkeranjang->count();
         $total = 0;
         $subtotal = 0;

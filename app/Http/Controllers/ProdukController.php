@@ -26,4 +26,21 @@ class ProdukController extends Controller
             return $productlist;
         }
     }
+    public function show($id){
+        $data = Produk::where('id', $id)->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $productlist = collect($data);
+            $productlist->toJson();
+            return $productlist;
+        }
+        else{
+            $data = [
+                ['id' => null],
+            ];
+            $productlist = collect($data);
+            $productlist->toJson();
+            return $productlist;
+        }
+    }
 }

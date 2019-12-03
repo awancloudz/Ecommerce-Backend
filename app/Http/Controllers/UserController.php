@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\User;
+use Hash;
+use App\Kota;
+use App\Provinsi;
 
 class UserController extends Controller
 {
@@ -27,9 +30,8 @@ class UserController extends Controller
             //Cek Password HASH
             foreach($userlogin as $user){
                 $passwordhash = $user->password;
-                $active = $user->active;
             }
-            if ((Hash::check($password, $passwordhash)) && ($active == 'Y')) {
+            if (Hash::check($password, $passwordhash)) {
                 $koleksi = collect($userlogin);
                 $koleksi->toJson();
                 return $koleksi;
@@ -42,6 +44,58 @@ class UserController extends Controller
                 $kosong->toJson();
                 return $kosong; 
             }
+        }
+    }
+    public function citylist(){
+        $data = Kota::with('provinsi')->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $detailcity = collect($data);
+            $detailcity->toJson();
+            return $detailcity;
+        }
+        else{
+            $data = [
+                 ['id' => null],
+            ];
+            $detailcity = collect($data);
+            $detailcity->toJson();
+            return $detailcity;
+        }
+    }
+    public function createuser(Request $request){
+        $input = $request->all();
+        $input['password'] = bcrypt($input['password']);
+	    $createuser = User::create($input);
+	    return $createuser;
+    }
+    public function updateuser(Request $request){
+        $item = $request->id;
+        settype($item, "integer");
+        $updateuser = User::findOrFail($item);
+        $input = $request->all();
+        if($request->password != ''){
+            $input['password'] = bcrypt($input['password']);
+        }
+        $updateuser->update($input);
+        return $updateuser;
+    }
+    public function userlist($iduser){
+        settype($iduser, "integer");
+        $data = User::where('id', $iduser)->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $detailuser = collect($data);
+            $detailuser->toJson();
+            return $detailuser;
+        }
+        else{
+            $data = [
+                 ['id' => null],
+            ];
+            $detailuser = collect($data);
+            $detailuser->toJson();
+            return $detailuser;
         }
     }
 }
