@@ -15,6 +15,7 @@ class DetailPenjualan extends Model
         'created_at',
         'updated_at'
     ];
+    
     //Relasi One to Many ke
     public function transaksipenjualan(){
         return $this->belongsTo('App\TransaksiPenjualan', 'id_transaksipenjualan');

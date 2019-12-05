@@ -32,7 +32,7 @@ class KeranjangController extends Controller
         $subtotal = 0;
         if($jumlahkeranjang == 0){
             $koleksi2 = [
-                ['user' => null,'subtotal' => 0,'kodepenjualan' => $kode,'jumlahkeranjang' => null],
+                ['user' => null,'subtotal' => 0,'kodepenjualan' => $kode,'jumlahkeranjang' => 0,'totalongkir' => 0,'totalbayar' => 0],
             ];
         }
         else{
@@ -44,7 +44,7 @@ class KeranjangController extends Controller
             }
             
             $koleksi2 = [
-                ['user' => $user,'subtotal' => $subtotal,'kodepenjualan' => $kode,'jumlahkeranjang' => $jumlahkeranjang],
+                ['user' => $user,'subtotal' => $subtotal,'kodepenjualan' => $kode,'jumlahkeranjang' => $jumlahkeranjang,'totalongkir' => 0,'totalbayar' => $subtotal],
             ];    
         }
         

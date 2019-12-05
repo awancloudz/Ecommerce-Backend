@@ -10,6 +10,10 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+header('Access-Control-Allow-Origin: http://localhost');
+header('Access-Control-Allow-Credentials: true');
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, x-xsrf-token');
 
 Route::get('productlist', 'ProdukController@index');
 Route::get('productlist/{id}', 'ProdukController@show');
@@ -25,3 +29,7 @@ Route::post('user', 'UserController@createuser');
 Route::put('user', 'UserController@updateuser');
 
 Route::get('citylist', 'UserController@citylist');
+
+Route::get('transaction/{iduser}', 'TransaksiPenjualanController@index');
+Route::get('transaction/checkout/{kode}', 'TransaksiPenjualanController@checkout');
+Route::post('transaction', 'TransaksiPenjualanController@save');
