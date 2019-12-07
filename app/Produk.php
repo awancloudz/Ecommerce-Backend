@@ -31,4 +31,7 @@ class Produk extends Model
     public function detailpenjualan(){
         return $this->hasMany('App\DetailPenjualan', 'id_produk');
     }
+    public function fotoproduk(){
+        return $this->hasMany('App\FotoProduk', 'id_produk');
+    }
 }

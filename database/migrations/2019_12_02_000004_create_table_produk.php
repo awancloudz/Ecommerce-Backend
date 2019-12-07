@@ -42,6 +42,13 @@ class CreateTableProduk extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
+        Schema::table('fotoproduk', function(Blueprint $table) {
+            $table->foreign('id_produk')
+                ->references('id')
+                ->on('produk')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        });
     }
 
     /**
@@ -56,6 +63,9 @@ class CreateTableProduk extends Migration
         });
         Schema::table('detailpenjualan', function(Blueprint $table) {
             $table->dropForeign('detailpenjualan_id_produkr_foreign');
+        });
+        Schema::table('fotoproduk', function(Blueprint $table) {
+            $table->dropForeign('fotoproduk_id_produk_foreign');
         });
         Schema::drop('produk');
     }
