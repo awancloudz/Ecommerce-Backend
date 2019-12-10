@@ -12,7 +12,7 @@ class Alamat extends Model
         'id_users', 
         'id_kota', 
         'namaalamat',
-        'namapenerima',
+        'nama',
         'alamat',
         'kodepos',
         'nohp',

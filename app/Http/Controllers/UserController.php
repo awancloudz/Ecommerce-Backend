@@ -101,7 +101,7 @@ class UserController extends Controller
     }
     public function addresslist($iduser){
         settype($iduser, "integer");
-        $data = Alamat::where('id_users', $iduser)->get();
+        $data = Alamat::where('id_users', $iduser)->with('kota')->orderBy('utama')->get();
         $jumlah = $data->count();
         if($jumlah > 0){
             $detailalamat = collect($data);
@@ -134,5 +134,30 @@ class UserController extends Controller
             $detailalamat->toJson();
             return $detailalamat;
         }
+    }
+    public function setaddress($address){
+        settype($address, "integer");
+        $alamatawal = Alamat::where('utama',1)->get();
+        foreach($alamatawal as $alamat){
+            $alamat->utama = 2;
+            $alamat->update();
+        }
+
+        $updatealamat = Alamat::findOrFail($address);
+        $updatealamat->utama = 1;
+        $updatealamat->update();
+
+        return $updatealamat;
+    }
+    public function createaddress(Request $request){
+        $input = $request->all();
+	    $createaddress = Alamat::create($input);
+	    return $createaddress;
+    }
+    public function destroy($id){
+        settype($id, "integer");
+        $deleteaddress = Alamat::findOrFail($id);
+        $deleteaddress->delete();
+        return $deleteaddress;
     }
 }
