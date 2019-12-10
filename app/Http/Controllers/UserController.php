@@ -9,6 +9,7 @@ use App\User;
 use Hash;
 use App\Kota;
 use App\Provinsi;
+use App\Alamat;
 
 class UserController extends Controller
 {
@@ -96,6 +97,42 @@ class UserController extends Controller
             $detailuser = collect($data);
             $detailuser->toJson();
             return $detailuser;
+        }
+    }
+    public function addresslist($iduser){
+        settype($iduser, "integer");
+        $data = Alamat::where('id_users', $iduser)->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $detailalamat = collect($data);
+            $detailalamat->toJson();
+            return $detailalamat;
+        }
+        else{
+            $data = [
+                 ['id' => null],
+            ];
+            $detailalamat = collect($data);
+            $detailalamat->toJson();
+            return $detailalamat;
+        }
+    }
+    public function addressmain($iduser){
+        settype($iduser, "integer");
+        $data = Alamat::where('id_users', $iduser)->where('utama', 1)->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $detailalamat = collect($data);
+            $detailalamat->toJson();
+            return $detailalamat;
+        }
+        else{
+            $data = [
+                 ['id' => null],
+            ];
+            $detailalamat = collect($data);
+            $detailalamat->toJson();
+            return $detailalamat;
         }
     }
 }

@@ -20,7 +20,7 @@ class Kota extends Model
         return $this->belongsTo('App\Provinsi', 'id_provinsi');
     }
 
-    public function user(){
-        return $this->hasMany('App\User', 'id_kota');
+    public function alamat(){
+        return $this->hasMany('App\Alamat', 'id_kota');
     }
 }

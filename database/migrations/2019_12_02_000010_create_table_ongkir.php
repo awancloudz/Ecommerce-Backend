@@ -16,7 +16,7 @@ class CreateTableOngkir extends Migration
             $table->increments('id');
             $table->integer('destination');
             $table->string('cityname');
-            $table->string('services');
+            $table->string('service');
             $table->double('costs');
             $table->string('estimate');
             $table->timestamps();

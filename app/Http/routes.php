@@ -30,6 +30,8 @@ Route::delete('cartlist/{item}', 'KeranjangController@destroy');
 
 Route::get('userlogin/{email}/password/{password}', 'UserController@userlogin');
 Route::get('user/{iduser}', 'UserController@userlist');
+Route::get('user/address/{iduser}', 'UserController@addresslist');
+Route::get('user/address/main/{iduser}', 'UserController@addressmain');
 Route::post('user', 'UserController@createuser');
 Route::put('user', 'UserController@updateuser');
 

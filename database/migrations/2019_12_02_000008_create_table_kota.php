@@ -18,7 +18,7 @@ class CreateTableKota extends Migration
             $table->string('namakota');
             $table->timestamps();
         });
-        Schema::table('users', function(Blueprint $table) {
+        Schema::table('alamat', function(Blueprint $table) {
             $table->foreign('id_kota')
                 ->references('id')
                 ->on('kota')
@@ -34,8 +34,8 @@ class CreateTableKota extends Migration
      */
     public function down()
     {
-        Schema::table('users', function(Blueprint $table) {
-            $table->dropForeign('users_id_kota_foreign');
+        Schema::table('alamat', function(Blueprint $table) {
+            $table->dropForeign('alamat_id_kota_foreign');
         });
         Schema::drop('kota');
     }

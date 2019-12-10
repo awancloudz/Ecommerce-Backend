@@ -16,6 +16,7 @@ class CreateTableTransaksipenjualan extends Migration
             $table->increments('id');
             $table->string('kodetransaksi',30)->unique();
             $table->integer('id_users')->unsigned();
+            $table->integer('id_alamat')->unsigned();
             $table->date('tanggal');
             $table->double('totaldiskon');
             $table->double('totalbelanja');

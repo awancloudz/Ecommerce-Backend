@@ -18,8 +18,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('nohp')->unique();
             $table->string('password');
-            $table->text('alamat');
-            $table->integer('id_kota')->unsigned();
             $table->rememberToken();
             $table->timestamps();
         });
@@ -31,6 +29,13 @@ class CreateUsersTable extends Migration
                 ->onUpdate('cascade');
         });
         Schema::table('transaksipenjualan', function(Blueprint $table) {
+            $table->foreign('id_users')
+                ->references('id')
+                ->on('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        });
+        Schema::table('alamat', function(Blueprint $table) {
             $table->foreign('id_users')
                 ->references('id')
                 ->on('users')
@@ -51,6 +56,9 @@ class CreateUsersTable extends Migration
         });
         Schema::table('transaksipenjualan', function(Blueprint $table) {
             $table->dropForeign('transaksipenjualan_id_users_foreign');
+        });
+        Schema::table('alamat', function(Blueprint $table) {
+            $table->dropForeign('alamat_id_users_foreign');
         });
         Schema::drop('users');
     }

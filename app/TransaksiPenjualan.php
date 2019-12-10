@@ -11,6 +11,7 @@ class TransaksiPenjualan extends Model
     protected $fillable = [
         'kodetransaksi',
         'id_users',
+        'id_alamat',
     	'tanggal',
         'totaldiskon',
         'totalbelanja',
@@ -30,5 +31,8 @@ class TransaksiPenjualan extends Model
 
     public function user(){
         return $this->belongsTo('App\User', 'id_users');
+    }
+    public function alamat(){
+        return $this->belongsTo('App\Alamat', 'id_alamat');
     }
 }
