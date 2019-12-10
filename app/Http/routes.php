@@ -15,9 +15,11 @@ header('Access-Control-Allow-Credentials: true');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Requested-With, x-xsrf-token');
 
-Route::get('transaction/asal/{asal}/tujuan/{tujuan}/berat/{berat}/kurir/{kurir}', [
+Route::get('scrape/asal/{asal}/tujuan/{tujuan}/berat/{berat}/kurir/{kurir}', [
+    'as' => 'scrape', 'uses' => 'TransaksiPenjualanController@scrape']);
+Route::get('transaction/asal/{asal}/tujuan/{tujuan}/berat/{berat}', [
     'as' => 'ongkir', 'uses' => 'TransaksiPenjualanController@ongkir']);
-    
+
 Route::get('productlist', 'ProdukController@index');
 Route::get('productlist/{id}', 'ProdukController@show');
 

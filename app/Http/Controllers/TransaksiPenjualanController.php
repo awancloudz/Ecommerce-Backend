@@ -9,6 +9,7 @@ use App\TransaksiPenjualan;
 use App\DetailPenjualan;
 use App\Keranjang;
 use App\Produk;
+use App\Ongkir;
 
 class TransaksiPenjualanController extends Controller
 {
@@ -31,6 +32,10 @@ class TransaksiPenjualanController extends Controller
         return $koleksi;
     }
     public function save(Request $request){
+        //Angka Acak 3 digit
+				$digits = 3;
+        $random = str_pad(rand(0, pow(10, $digits)-1), $digits, '0', STR_PAD_LEFT);
+
         $input = $request->all();
         $createtransaction = TransaksiPenjualan::create($input);
         
@@ -63,7 +68,8 @@ class TransaksiPenjualanController extends Controller
 
 	    return $createtransaction;
     }
-    public function ongkir($asal, $tujuan, $berat, $kurir){
+    public function scrape($asal, $tujuan, $berat, $kurir){
+    for($a=1; $a < 502; $a++){
 		//Cek Ongkir
 		$curl = curl_init();
 		curl_setopt_array($curl, array(
@@ -74,7 +80,7 @@ class TransaksiPenjualanController extends Controller
 		  CURLOPT_TIMEOUT => 30,
 		  CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 		  CURLOPT_CUSTOMREQUEST => "POST",
-		  CURLOPT_POSTFIELDS => "origin=".$asal."&destination=".$tujuan."&weight=".$berat."&courier=".$kurir,
+		  CURLOPT_POSTFIELDS => "origin=".$asal."&destination=".$a."&weight=".$berat."&courier=".$kurir,
 		  CURLOPT_HTTPHEADER => array(
 			"content-type: application/x-www-form-urlencoded",
 			"key: e200ef6f31f5ba64525f28725d4a980d"
@@ -99,17 +105,66 @@ class TransaksiPenjualanController extends Controller
 			  );
   
 			  for ($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {
-				  $ongkir[] = array(
+				  /*$ongkir[] = array(
+            'cityname' => $data['rajaongkir']['destination_details']['city_name'],
 					  'service' => $data['rajaongkir']['results'][0]['costs'][$i]['service'],
 					  'costs' => $data['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['value'],
 					  'estimate' => $data['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['etd'],
-				  );
+          );*/
+          $ongkir = New Ongkir;
+          $ongkir->destination = $a;
+          $ongkir->cityname = $data['rajaongkir']['destination_details']['city_name'];
+          $ongkir->service = $data['rajaongkir']['results'][0]['costs'][$i]['service'];
+          $ongkir->costs = $data['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['value'];
+          $ongkir->estimate = $data['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['etd'];
+          $ongkir->save();
 			  }
 		  }
 		  $datakirim = collect($pengiriman);
 		  $datakirim->toJson();
 		  $dataongkir = collect($ongkir);
 		  $dataongkir->toJson();
-		  return $dataongkir;
-	}
+      //return $dataongkir;
+      echo $dataongkir;
+    }
+    }
+    
+    public function ongkir($asal, $tujuan, $berat){
+      $ongkirnya = Ongkir::where('destination',$tujuan)->get();
+
+      // Weight * Costs
+      $hitung=$berat / 1000;
+      if($hitung==0){
+        $hasil=1;
+      }
+      else
+      {
+        if(strpos($hitung,".")){
+          $split_angka=explode(".",$hitung);
+          if($split_angka[1] < 999){
+            $angka2=1;
+            $hitung=$split_angka[0] + $angka2;
+            $hasil=$hitung;
+          }
+        }
+        else
+        {
+          $hasil=$hitung;	
+        }
+      }
+      
+      // Tampilkan hasil hitung
+      foreach($ongkirnya as $ongk){
+        $totalbiaya = 0;
+        $totalbiaya = $ongk->costs * $hasil;
+        $ongkir[] = array(
+          'service' => $ongk->service,
+          'costs' => $totalbiaya,
+          'estimate' => $ongk->estimate,
+        );
+      }
+      $dataongkir = collect($ongkir);
+		  $dataongkir->toJson();
+      return $dataongkir;
+    }
 }
