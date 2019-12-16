@@ -119,7 +119,7 @@ class UserController extends Controller
     }
     public function addressmain($iduser){
         settype($iduser, "integer");
-        $data = Alamat::where('id_users', $iduser)->where('utama', 1)->get();
+        $data = Alamat::where('id_users', $iduser)->where('utama', 1)->with('kota')->get();
         $jumlah = $data->count();
         if($jumlah > 0){
             $detailalamat = collect($data);

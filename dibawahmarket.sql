@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.12
+-- version 4.3.11
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Dec 10, 2019 at 10:22 PM
--- Server version: 5.6.16
--- PHP Version: 5.5.11
+-- Host: 127.0.0.1
+-- Generation Time: Dec 12, 2019 at 09:26 AM
+-- Server version: 5.6.24
+-- PHP Version: 5.6.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE IF NOT EXISTS `alamat` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `id_users` int(10) unsigned NOT NULL,
   `id_kota` int(10) unsigned NOT NULL,
   `namaalamat` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -37,11 +37,16 @@ CREATE TABLE IF NOT EXISTS `alamat` (
   `nohp` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `utama` enum('1','2') COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `alamat_id_users_foreign` (`id_users`),
-  KEY `alamat_id_kota_foreign` (`id_kota`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `alamat`
+--
+
+INSERT INTO `alamat` (`id`, `id_users`, `id_kota`, `namaalamat`, `nama`, `alamat`, `kodepos`, `nohp`, `utama`, `created_at`, `updated_at`) VALUES
+(1, 1, 399, 'Rumah', 'Awan Aprifiantosa', 'Tamansari Majapahit C2-5, Pedurungan Lor, Pedurungan', '50197', '081279349292', '1', '2019-12-11 23:25:19', '2019-12-11 23:25:19'),
+(2, 2, 399, 'Rumah', 'Adi Nugroho', 'Graha Wahid Cluster Milan B15, Kedungmundu, Tembalang', '50273', '082225002008', '1', '2019-12-11 17:00:00', '2019-12-11 17:00:00');
 
 -- --------------------------------------------------------
 
@@ -50,16 +55,13 @@ CREATE TABLE IF NOT EXISTS `alamat` (
 --
 
 CREATE TABLE IF NOT EXISTS `detailpenjualan` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `id_transaksipenjualan` int(10) unsigned NOT NULL,
   `id_produk` int(10) unsigned NOT NULL,
   `jumlah` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `detailpenjualan_id_transaksipenjualan_foreign` (`id_transaksipenjualan`),
-  KEY `detailpenjualan_id_produk_foreign` (`id_produk`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -68,14 +70,12 @@ CREATE TABLE IF NOT EXISTS `detailpenjualan` (
 --
 
 CREATE TABLE IF NOT EXISTS `fotoproduk` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `id_produk` int(10) unsigned NOT NULL,
   `foto` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `fotoproduk_id_produk_foreign` (`id_produk`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=26 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `fotoproduk`
@@ -115,16 +115,29 @@ INSERT INTO `fotoproduk` (`id`, `id_produk`, `foto`, `created_at`, `updated_at`)
 --
 
 CREATE TABLE IF NOT EXISTS `keranjang` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `id_users` int(10) unsigned NOT NULL,
   `id_produk` int(10) unsigned NOT NULL,
   `jumlah` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `keranjang_id_produk_foreign` (`id_produk`),
-  KEY `keranjang_id_users_foreign` (`id_users`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `konfirmasi`
+--
+
+CREATE TABLE IF NOT EXISTS `konfirmasi` (
+  `id` int(10) unsigned NOT NULL,
+  `id_transaksipenjualan` int(10) unsigned NOT NULL,
+  `nama` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `bank` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `norekening` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -133,14 +146,12 @@ CREATE TABLE IF NOT EXISTS `keranjang` (
 --
 
 CREATE TABLE IF NOT EXISTS `kota` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `id_provinsi` int(10) unsigned NOT NULL,
   `namakota` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `kota_id_provinsi_foreign` (`id_provinsi`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=502 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=502 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `kota`
@@ -668,6 +679,7 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 ('2019_12_02_000000_create_table_fotoproduk', 1),
 ('2019_12_02_000001_create_table_keranjang', 1),
 ('2019_12_02_000002_create_table_detailpenjualan', 1),
+('2019_12_02_000002a_create_table_konfirmasi', 1),
 ('2019_12_02_000003_create_table_transaksipenjualan', 1),
 ('2019_12_02_000004_create_table_produk', 1),
 ('2019_12_02_000005_create_table_alamat', 1),
@@ -684,16 +696,15 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `ongkir` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `destination` int(11) NOT NULL,
   `cityname` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `service` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `costs` double NOT NULL,
   `estimate` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1036 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=1036 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `ongkir`
@@ -1746,9 +1757,7 @@ INSERT INTO `ongkir` (`id`, `destination`, `cityname`, `service`, `costs`, `esti
 CREATE TABLE IF NOT EXISTS `password_resets` (
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  KEY `password_resets_email_index` (`email`),
-  KEY `password_resets_token_index` (`token`)
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
@@ -1758,7 +1767,7 @@ CREATE TABLE IF NOT EXISTS `password_resets` (
 --
 
 CREATE TABLE IF NOT EXISTS `produk` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `kodeproduk` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `namaproduk` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `deskripsi` text COLLATE utf8_unicode_ci NOT NULL,
@@ -1772,22 +1781,20 @@ CREATE TABLE IF NOT EXISTS `produk` (
   `dilihat` int(11) NOT NULL,
   `terjual` int(11) NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `produk_kodeproduk_unique` (`kodeproduk`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `produk`
 --
 
 INSERT INTO `produk` (`id`, `kodeproduk`, `namaproduk`, `deskripsi`, `foto`, `link`, `stok`, `berat`, `hargabeli`, `hargajual`, `hargagrosir`, `dilihat`, `terjual`, `created_at`, `updated_at`) VALUES
-(1, '12345', 'Rc Cars for Kids 1:28 Remote Control Car Dual Mode', 'Type:\nCAR\nPower:\nBattery, Built-in Lithium Battery\nMaterial:\nPlastic, ABS Plastic\nPlastic Type:\nABS\nScale:\n1:28\nRadio Control Style:\nRC Hobby\nPlace of Origin:\nGuangdong,China, Guangdong, China (Mainland)\nBrand Name:\nXZS\nModel Number:\n929A-1\nStyle:\nRadio Control Toy\nDescription:\nStunt Climbing Car\nFeature:\n4 Channels, Lighting\nAge:\n8+\nFunction:\nTurn left, Turn right,Forward, Backward,Climbing wall\nColor:\nRed,Blue,Yellow\nPackage:\nWindow Box', 'rc3.png', 'produk-1', 80, 1, 50000, 500000, 450000, 1, 0, NULL, '2019-12-09 16:33:29'),
-(2, '12346', '3 in 1 round magnetic phone cable for micro/IOS / ', '3 in 1 round magnetic phone cable for micro/IOS / Type C cell phone fast charging magnetic usb cable with cheap price', 'magnetic1.jpg', 'produk-2', 83, 1, 10000, 100000, 75000, 1, 0, NULL, '2019-12-09 16:33:29'),
-(3, '12347', 'Universal Mini Air Vent Mobile Cell Stand Gravity ', 'Place of Origin:\nChina\nBrand Name:\nKAKASGO\nModel Number:\nYINOH-185\nCharger:\nNo\nCompatible Brand:\nApple iPhone\nMaterial:\nABS+Silicone\nProduct Name:\nMobile Cell Stand Gravity Car Mount Phone Holder\nProduct Size:\n115*27.5*4mm\nSingle Gross Weight:\n0.078KG\nCompatible With:\nWith a width between 2.64" to 3.38"and thickness under 0.39"\nUsage:\nAdjustable Car Air Vent Mount Car Holders\nDesign:\nUniversal Gravity Car phone Holde\nColor:\nGrey, Silver, Red\nCustomized Logo Quantity:\n500\nPackage:\nWith Retail Package\nFeature:\nOne Phone Holder', 'stand1.jpg', 'produk-3', 90, 1, 30000, 300000, 250000, 1, 0, NULL, '2019-12-09 16:33:29'),
-(4, '12348', 'Latest model multi-functional college student shou', 'Gender:\nUnisex\nMaterial:\nCanvas\nPlace of Origin:\nGuangdong, China\nBrand Name:\nAnston\nModel Number:\nFSB01\nPattern Type:\nNone\nDecoration:\nNone\nProduct name:\nshoulder bag waterproof\nStyle:\nFashionable\nUsage:\nDaily Used\nSize:\nRegular Size\nLogo:\nAccept Customized Logo\nFeature:\nHigh Quallity\nMOQ:\n10 Pcs\nPacking:\nOpp Bag\ncolor:\nBlack,GRAY,Dark blue', 'bag1.png', 'produk-4', 94, 1, 20000, 200000, 150000, 1, 0, NULL, '2019-12-06 12:11:00'),
-(5, '12349', 'Baby Knee Pads for Crawling,Anti Slip Baby Knee Pa', 'Place of Origin:\nZhejiang, China\nBrand Name:\nEcoHome\nModel Number:\nEC005YMX\nMaterial:\ncotton\nmaterial:\ncotton\nsize:\n12x9cm\ncolor:\nblack,red,pink,grey,navy,dark grey,green,blue\nlogo:\nprinting\nOEM:\nworkable\nMOQ:\n10pairs\nFBA delivery:\nwe may delivery to FBA\nFeature:\nAnti slip\nFunction:\nbaby knee pads protector\ntype:\nbaby knee pads', 'baby1.jpg', 'produk-1', 98, 1, 50000, 500000, 450000, 1, 0, NULL, '2019-12-06 02:38:04'),
-(6, '123410', '100% silicone rubber triangle the easy pencil grip', 'Place of Origin:\nGuangdong, China\nBrand Name:\nshinebager\nModel Number:\nxbb001\nMaterial:\n100% Silicone', 'pencil1.jpg', 'produk-2', 97, 1, 10000, 100000, 75000, 1, 0, NULL, '2019-12-06 12:11:00');
+(1, '12345', 'Rc Cars for Kids 1:28 Remote Control Car Dual Mode', 'Type:\nCAR\nPower:\nBattery, Built-in Lithium Battery\nMaterial:\nPlastic, ABS Plastic\nPlastic Type:\nABS\nScale:\n1:28\nRadio Control Style:\nRC Hobby\nPlace of Origin:\nGuangdong,China, Guangdong, China (Mainland)\nBrand Name:\nXZS\nModel Number:\n929A-1\nStyle:\nRadio Control Toy\nDescription:\nStunt Climbing Car\nFeature:\n4 Channels, Lighting\nAge:\n8+\nFunction:\nTurn left, Turn right,Forward, Backward,Climbing wall\nColor:\nRed,Blue,Yellow\nPackage:\nWindow Box', 'rc3.png', 'produk-1', 76, 200, 50000, 500000, 450000, 1, 0, NULL, '2019-12-12 00:37:15'),
+(2, '12346', '3 in 1 round magnetic phone cable for micro/IOS / ', '3 in 1 round magnetic phone cable for micro/IOS / Type C cell phone fast charging magnetic usb cable with cheap price', 'magnetic1.jpg', 'produk-2', 82, 200, 10000, 100000, 75000, 1, 0, NULL, '2019-12-12 00:37:15'),
+(3, '12347', 'Universal Mini Air Vent Mobile Cell Stand Gravity ', 'Place of Origin:\nChina\nBrand Name:\nKAKASGO\nModel Number:\nYINOH-185\nCharger:\nNo\nCompatible Brand:\nApple iPhone\nMaterial:\nABS+Silicone\nProduct Name:\nMobile Cell Stand Gravity Car Mount Phone Holder\nProduct Size:\n115*27.5*4mm\nSingle Gross Weight:\n0.078KG\nCompatible With:\nWith a width between 2.64" to 3.38"and thickness under 0.39"\nUsage:\nAdjustable Car Air Vent Mount Car Holders\nDesign:\nUniversal Gravity Car phone Holde\nColor:\nGrey, Silver, Red\nCustomized Logo Quantity:\n500\nPackage:\nWith Retail Package\nFeature:\nOne Phone Holder', 'stand1.jpg', 'produk-3', 88, 200, 30000, 300000, 250000, 1, 0, NULL, '2019-12-12 00:32:05'),
+(4, '12348', 'Latest model multi-functional college student shou', 'Gender:\nUnisex\nMaterial:\nCanvas\nPlace of Origin:\nGuangdong, China\nBrand Name:\nAnston\nModel Number:\nFSB01\nPattern Type:\nNone\nDecoration:\nNone\nProduct name:\nshoulder bag waterproof\nStyle:\nFashionable\nUsage:\nDaily Used\nSize:\nRegular Size\nLogo:\nAccept Customized Logo\nFeature:\nHigh Quallity\nMOQ:\n10 Pcs\nPacking:\nOpp Bag\ncolor:\nBlack,GRAY,Dark blue', 'bag1.png', 'produk-4', 94, 200, 20000, 200000, 150000, 1, 0, NULL, '2019-12-06 12:11:00'),
+(5, '12349', 'Baby Knee Pads for Crawling,Anti Slip Baby Knee Pa', 'Place of Origin:\nZhejiang, China\nBrand Name:\nEcoHome\nModel Number:\nEC005YMX\nMaterial:\ncotton\nmaterial:\ncotton\nsize:\n12x9cm\ncolor:\nblack,red,pink,grey,navy,dark grey,green,blue\nlogo:\nprinting\nOEM:\nworkable\nMOQ:\n10pairs\nFBA delivery:\nwe may delivery to FBA\nFeature:\nAnti slip\nFunction:\nbaby knee pads protector\ntype:\nbaby knee pads', 'baby1.jpg', 'produk-1', 98, 200, 50000, 500000, 450000, 1, 0, NULL, '2019-12-06 02:38:04'),
+(6, '123410', '100% silicone rubber triangle the easy pencil grip', 'Place of Origin:\nGuangdong, China\nBrand Name:\nshinebager\nModel Number:\nxbb001\nMaterial:\n100% Silicone', 'pencil1.jpg', 'produk-2', 97, 200, 10000, 100000, 75000, 1, 0, NULL, '2019-12-06 12:11:00');
 
 -- --------------------------------------------------------
 
@@ -1796,12 +1803,11 @@ INSERT INTO `produk` (`id`, `kodeproduk`, `namaproduk`, `deskripsi`, `foto`, `li
 --
 
 CREATE TABLE IF NOT EXISTS `provinsi` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `namaprovinsi` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=35 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `provinsi`
@@ -1850,7 +1856,7 @@ INSERT INTO `provinsi` (`id`, `namaprovinsi`, `created_at`, `updated_at`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `transaksipenjualan` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `kodetransaksi` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `id_users` int(10) unsigned NOT NULL,
   `id_alamat` int(10) unsigned NOT NULL,
@@ -1861,15 +1867,11 @@ CREATE TABLE IF NOT EXISTS `transaksipenjualan` (
   `subtotal` double NOT NULL,
   `kurir` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `layanan` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `status` enum('order','siap','kirim','selesai') COLLATE utf8_unicode_ci NOT NULL,
+  `status` enum('order','konfirm','proses','kirim','selesai') COLLATE utf8_unicode_ci NOT NULL,
   `jenis` enum('retail','grosir') COLLATE utf8_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `transaksipenjualan_kodetransaksi_unique` (`kodetransaksi`),
-  KEY `transaksipenjualan_id_alamat_foreign` (`id_alamat`),
-  KEY `transaksipenjualan_id_users_foreign` (`id_users`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -1878,18 +1880,15 @@ CREATE TABLE IF NOT EXISTS `transaksipenjualan` (
 --
 
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL,
   `nama` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `nohp` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`),
-  UNIQUE KEY `users_nohp_unique` (`nohp`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+  `updated_at` timestamp NULL DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
@@ -1897,8 +1896,143 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `nama`, `email`, `nohp`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Admin', 'admin@gmail.com', '0812345678', '$2y$10$uYRPn2PYr5oTg4/mElzg4e1QlGxrwufr8nbfYF5yG6LmnuJVwvari', NULL, '2019-12-06 00:55:19', '2019-12-06 00:55:19'),
-(2, 'adi', 'benhot@gmail.com ', '082225002008', '$2y$10$kV9yptm2ea3kllubEPlkY.z/QqFeZfUsO6FRn/QldOagho7.wfnWW', NULL, '2019-12-08 16:00:44', '2019-12-08 16:03:08');
+(2, 'Adi', 'benhot@gmail.com ', '082225002008', '$2y$10$kV9yptm2ea3kllubEPlkY.z/QqFeZfUsO6FRn/QldOagho7.wfnWW', NULL, '2019-12-08 16:00:44', '2019-12-08 16:03:08');
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `alamat`
+--
+ALTER TABLE `alamat`
+  ADD PRIMARY KEY (`id`), ADD KEY `alamat_id_users_foreign` (`id_users`), ADD KEY `alamat_id_kota_foreign` (`id_kota`);
+
+--
+-- Indexes for table `detailpenjualan`
+--
+ALTER TABLE `detailpenjualan`
+  ADD PRIMARY KEY (`id`), ADD KEY `detailpenjualan_id_transaksipenjualan_foreign` (`id_transaksipenjualan`), ADD KEY `detailpenjualan_id_produk_foreign` (`id_produk`);
+
+--
+-- Indexes for table `fotoproduk`
+--
+ALTER TABLE `fotoproduk`
+  ADD PRIMARY KEY (`id`), ADD KEY `fotoproduk_id_produk_foreign` (`id_produk`);
+
+--
+-- Indexes for table `keranjang`
+--
+ALTER TABLE `keranjang`
+  ADD PRIMARY KEY (`id`), ADD KEY `keranjang_id_produk_foreign` (`id_produk`), ADD KEY `keranjang_id_users_foreign` (`id_users`);
+
+--
+-- Indexes for table `konfirmasi`
+--
+ALTER TABLE `konfirmasi`
+  ADD PRIMARY KEY (`id`), ADD KEY `konfirmasi_id_transaksipenjualan_foreign` (`id_transaksipenjualan`);
+
+--
+-- Indexes for table `kota`
+--
+ALTER TABLE `kota`
+  ADD PRIMARY KEY (`id`), ADD KEY `kota_id_provinsi_foreign` (`id_provinsi`);
+
+--
+-- Indexes for table `ongkir`
+--
+ALTER TABLE `ongkir`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `password_resets`
+--
+ALTER TABLE `password_resets`
+  ADD KEY `password_resets_email_index` (`email`), ADD KEY `password_resets_token_index` (`token`);
+
+--
+-- Indexes for table `produk`
+--
+ALTER TABLE `produk`
+  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `produk_kodeproduk_unique` (`kodeproduk`);
+
+--
+-- Indexes for table `provinsi`
+--
+ALTER TABLE `provinsi`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `transaksipenjualan`
+--
+ALTER TABLE `transaksipenjualan`
+  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `transaksipenjualan_kodetransaksi_unique` (`kodetransaksi`), ADD KEY `transaksipenjualan_id_alamat_foreign` (`id_alamat`), ADD KEY `transaksipenjualan_id_users_foreign` (`id_users`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`), ADD UNIQUE KEY `users_email_unique` (`email`), ADD UNIQUE KEY `users_nohp_unique` (`nohp`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `alamat`
+--
+ALTER TABLE `alamat`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=15;
+--
+-- AUTO_INCREMENT for table `detailpenjualan`
+--
+ALTER TABLE `detailpenjualan`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `fotoproduk`
+--
+ALTER TABLE `fotoproduk`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=26;
+--
+-- AUTO_INCREMENT for table `keranjang`
+--
+ALTER TABLE `keranjang`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `konfirmasi`
+--
+ALTER TABLE `konfirmasi`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `kota`
+--
+ALTER TABLE `kota`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=502;
+--
+-- AUTO_INCREMENT for table `ongkir`
+--
+ALTER TABLE `ongkir`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=1036;
+--
+-- AUTO_INCREMENT for table `produk`
+--
+ALTER TABLE `produk`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `provinsi`
+--
+ALTER TABLE `provinsi`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=35;
+--
+-- AUTO_INCREMENT for table `transaksipenjualan`
+--
+ALTER TABLE `transaksipenjualan`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=6;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- Constraints for dumped tables
 --
@@ -1907,41 +2041,47 @@ INSERT INTO `users` (`id`, `nama`, `email`, `nohp`, `password`, `remember_token`
 -- Constraints for table `alamat`
 --
 ALTER TABLE `alamat`
-  ADD CONSTRAINT `alamat_id_kota_foreign` FOREIGN KEY (`id_kota`) REFERENCES `kota` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `alamat_id_users_foreign` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `alamat_id_kota_foreign` FOREIGN KEY (`id_kota`) REFERENCES `kota` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `alamat_id_users_foreign` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `detailpenjualan`
 --
 ALTER TABLE `detailpenjualan`
-  ADD CONSTRAINT `detailpenjualan_id_produk_foreign` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `detailpenjualan_id_transaksipenjualan_foreign` FOREIGN KEY (`id_transaksipenjualan`) REFERENCES `transaksipenjualan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `detailpenjualan_id_produk_foreign` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `detailpenjualan_id_transaksipenjualan_foreign` FOREIGN KEY (`id_transaksipenjualan`) REFERENCES `transaksipenjualan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `fotoproduk`
 --
 ALTER TABLE `fotoproduk`
-  ADD CONSTRAINT `fotoproduk_id_produk_foreign` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `fotoproduk_id_produk_foreign` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `keranjang`
 --
 ALTER TABLE `keranjang`
-  ADD CONSTRAINT `keranjang_id_users_foreign` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `keranjang_id_produk_foreign` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `keranjang_id_produk_foreign` FOREIGN KEY (`id_produk`) REFERENCES `produk` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `keranjang_id_users_foreign` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `konfirmasi`
+--
+ALTER TABLE `konfirmasi`
+ADD CONSTRAINT `konfirmasi_id_transaksipenjualan_foreign` FOREIGN KEY (`id_transaksipenjualan`) REFERENCES `transaksipenjualan` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `kota`
 --
 ALTER TABLE `kota`
-  ADD CONSTRAINT `kota_id_provinsi_foreign` FOREIGN KEY (`id_provinsi`) REFERENCES `provinsi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `kota_id_provinsi_foreign` FOREIGN KEY (`id_provinsi`) REFERENCES `provinsi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `transaksipenjualan`
 --
 ALTER TABLE `transaksipenjualan`
-  ADD CONSTRAINT `transaksipenjualan_id_users_foreign` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `transaksipenjualan_id_alamat_foreign` FOREIGN KEY (`id_alamat`) REFERENCES `alamat` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+ADD CONSTRAINT `transaksipenjualan_id_alamat_foreign` FOREIGN KEY (`id_alamat`) REFERENCES `alamat` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `transaksipenjualan_id_users_foreign` FOREIGN KEY (`id_users`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

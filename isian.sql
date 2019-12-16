@@ -541,6 +541,10 @@ INSERT INTO `users` (`id`, `nama`, `email`, `nohp`, `password`, `remember_token`
 (1, 'Admin', 'admin@gmail.com', '0812345678', '$2y$10$uYRPn2PYr5oTg4/mElzg4e1QlGxrwufr8nbfYF5yG6LmnuJVwvari', NULL, '2019-12-06 07:55:19', '2019-12-06 07:55:19'),
 (2, 'adi', 'benhot@gmail.com ', '082225002008', '$2y$10$kV9yptm2ea3kllubEPlkY.z/QqFeZfUsO6FRn/QldOagho7.wfnWW', NULL, '2019-12-08 23:00:44', '2019-12-08 23:03:08');
 
+INSERT INTO `alamat` (`id`, `id_users`, `id_kota`, `namaalamat`, `nama`, `alamat`, `kodepos`, `nohp`, `utama`, `created_at`, `updated_at`) VALUES
+(1, 1, 399, 'Rumah', 'Awan Aprifiantosa', 'Tamansari Majapahit C2-5, Pedurungan Lor, Pedurungan', '50197', '081279349292', '1', '2019-12-11 23:25:19', '2019-12-11 23:25:19'),
+(2, 2, 399, 'Rumah', 'Adi Nugroho', 'Graha Wahid Cluster Milan B15, Kedungmundu, Tembalang', '50273', '082225002008', '1', '2019-12-11 17:00:00', '2019-12-11 17:00:00');
+
 INSERT INTO `produk` (`id`, `kodeproduk`, `namaproduk`, `deskripsi`, `foto`, `link`, `stok`, `berat`, `hargabeli`, `hargajual`, `hargagrosir`, `dilihat`, `terjual`, `created_at`, `updated_at`) VALUES
 (1, '12345', 'Rc Cars for Kids 1:28 Remote Control Car Dual Mode', 'Type:\nCAR\nPower:\nBattery, Built-in Lithium Battery\nMaterial:\nPlastic, ABS Plastic\nPlastic Type:\nABS\nScale:\n1:28\nRadio Control Style:\nRC Hobby\nPlace of Origin:\nGuangdong,China, Guangdong, China (Mainland)\nBrand Name:\nXZS\nModel Number:\n929A-1\nStyle:\nRadio Control Toy\nDescription:\nStunt Climbing Car\nFeature:\n4 Channels, Lighting\nAge:\n8+\nFunction:\nTurn left, Turn right,Forward, Backward,Climbing wall\nColor:\nRed,Blue,Yellow\nPackage:\nWindow Box', 'rc3.png', 'produk-1', 80, 1, 50000, 500000, 450000, 1, 0, NULL, '2019-12-09 23:33:29'),
 (2, '12346', '3 in 1 round magnetic phone cable for micro/IOS / ', '3 in 1 round magnetic phone cable for micro/IOS / Type C cell phone fast charging magnetic usb cable with cheap price', 'magnetic1.jpg', 'produk-2', 83, 1, 10000, 100000, 75000, 1, 0, NULL, '2019-12-09 23:33:29'),

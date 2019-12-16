@@ -10,6 +10,7 @@ use App\DetailPenjualan;
 use App\Keranjang;
 use App\Produk;
 use App\Ongkir;
+use App\Konfirmasi;
 
 class TransaksiPenjualanController extends Controller
 {
@@ -18,6 +19,16 @@ class TransaksiPenjualanController extends Controller
         settype($iduser, "integer");
         //Seleksi transaksi 
         $daftartransaksi = TransaksiPenjualan::where('id_users',$iduser)->with('detailpenjualan')->get();
+        $jumlahtransaksi = $daftartransaksi->count();
+        $koleksi = collect($daftartransaksi);
+        $koleksi->toJson();
+        return $koleksi;
+    }
+    public function detail($idtrans){
+        //USER
+        settype($idtrans, "integer");
+        //Seleksi transaksi 
+        $daftartransaksi = DetailPenjualan::where('id_transaksipenjualan',$idtrans)->with('produk')->get();
         $jumlahtransaksi = $daftartransaksi->count();
         $koleksi = collect($daftartransaksi);
         $koleksi->toJson();
@@ -67,6 +78,18 @@ class TransaksiPenjualanController extends Controller
         }
 
 	    return $createtransaction;
+    }
+    public function saveconfirmation(Request $request){
+      $input = $request->all();
+      $idtrans = $request->id_transaksipenjualan;
+      settype($iduser, "integer");
+      
+      $transaksi = TransaksiPenjualan::findOrFail($idtrans);
+      $transaksi->status = "konfirm";
+      $transaksi->update();
+      
+      $createconfirmation = Konfirmasi::create($input);
+	    return $createconfirmation;
     }
     public function scrape($asal, $tujuan, $berat, $kurir){
     for($a=1; $a < 502; $a++){

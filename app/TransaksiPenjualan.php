@@ -28,6 +28,9 @@ class TransaksiPenjualan extends Model
     public function detailpenjualan(){
         return $this->hasMany('App\DetailPenjualan', 'id_transaksipenjualan');
     }
+    public function konfirmasi(){
+        return $this->hasMany('App\Konfirmasi', 'id_transaksipenjualan');
+    }
 
     public function user(){
         return $this->belongsTo('App\User', 'id_users');

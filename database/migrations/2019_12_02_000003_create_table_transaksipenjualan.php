@@ -24,11 +24,18 @@ class CreateTableTransaksipenjualan extends Migration
             $table->double('subtotal');
             $table->string('kurir');
             $table->string('layanan');
-            $table->enum('status',['order','siap','kirim','selesai']);
+            $table->enum('status',['order','konfirm','proses','kirim','selesai']);
             $table->enum('jenis',['retail','grosir']);
             $table->timestamps();
         });
         Schema::table('detailpenjualan', function(Blueprint $table) {
+            $table->foreign('id_transaksipenjualan')
+                ->references('id')
+                ->on('transaksipenjualan')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        });
+        Schema::table('konfirmasi', function(Blueprint $table) {
             $table->foreign('id_transaksipenjualan')
                 ->references('id')
                 ->on('transaksipenjualan')
@@ -46,6 +53,9 @@ class CreateTableTransaksipenjualan extends Migration
     {
         Schema::table('detailpenjualan', function(Blueprint $table) {
             $table->dropForeign('detailpenjualan_id_transaksipenjualan_foreign');
+        });
+        Schema::table('konfirmasi', function(Blueprint $table) {
+            $table->dropForeign('konfirmasi_id_transaksipenjualan_foreign');
         });
         Schema::drop('transaksipenjualan');
     }

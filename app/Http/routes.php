@@ -41,5 +41,7 @@ Route::post('user/address', 'UserController@createaddress');
 Route::get('citylist', 'UserController@citylist');
 
 Route::get('transaction/{iduser}', 'TransaksiPenjualanController@index');
+Route::get('transaction/detail/{idtrans}', 'TransaksiPenjualanController@detail');
 Route::get('transaction/checkout/{kode}', 'TransaksiPenjualanController@checkout');
 Route::post('transaction', 'TransaksiPenjualanController@save');
+Route::post('transaction/confirmation', 'TransaksiPenjualanController@saveconfirmation');
