@@ -24,9 +24,9 @@ Route::get('productlist', 'ProdukController@index');
 Route::get('productlist/{id}', 'ProdukController@show');
 
 Route::get('cartlist/{iduser}', 'KeranjangController@index');
+Route::delete('cartlist/hapus/{id}', 'KeranjangController@destroy');
 Route::post('cartlist', 'KeranjangController@save');
 Route::put('cartlist', 'KeranjangController@update');
-Route::delete('cartlist/{item}', 'KeranjangController@destroy');
 
 Route::get('userlogin/{email}/password/{password}', 'UserController@userlogin');
 Route::get('user/{iduser}', 'UserController@userlist');
@@ -41,7 +41,9 @@ Route::post('user/address', 'UserController@createaddress');
 Route::get('citylist', 'UserController@citylist');
 
 Route::get('transaction/{iduser}', 'TransaksiPenjualanController@index');
+Route::get('transaction/view/{idtrans}', 'TransaksiPenjualanController@view');
 Route::get('transaction/detail/{idtrans}', 'TransaksiPenjualanController@detail');
 Route::get('transaction/checkout/{kode}', 'TransaksiPenjualanController@checkout');
 Route::post('transaction', 'TransaksiPenjualanController@save');
 Route::post('transaction/confirmation', 'TransaksiPenjualanController@saveconfirmation');
+

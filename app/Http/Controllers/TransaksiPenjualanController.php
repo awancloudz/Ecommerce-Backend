@@ -24,6 +24,16 @@ class TransaksiPenjualanController extends Controller
         $koleksi->toJson();
         return $koleksi;
     }
+    public function view($idtrans){
+      //USER
+      settype($idtrans, "integer");
+      //Seleksi transaksi 
+      $transaksi = TransaksiPenjualan::where('id',$idtrans)->get();
+      $jumlahtransaksi = $transaksi->count();
+      $koleksi = collect($transaksi);
+      $koleksi->toJson();
+      return $koleksi;
+  }
     public function detail($idtrans){
         //USER
         settype($idtrans, "integer");

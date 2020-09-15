@@ -28,7 +28,7 @@ class ProdukController extends Controller
         }
     }
     public function show($id){
-        $data = Produk::where('id', $id)->with('fotoproduk')->get();
+        $data = Produk::where('link', $id)->with('fotoproduk')->get();
         $jumlah = $data->count();
         if($jumlah > 0){
             $productlist = collect($data);
