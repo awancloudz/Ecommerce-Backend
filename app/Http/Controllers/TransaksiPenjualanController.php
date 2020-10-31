@@ -11,14 +11,21 @@ use App\Keranjang;
 use App\Produk;
 use App\Ongkir;
 use App\Konfirmasi;
+use App\User;
 
 class TransaksiPenjualanController extends Controller
 {
     public function index($iduser){
         //USER
         settype($iduser, "integer");
+        $user = User::findOrFail($iduser);
         //Seleksi transaksi 
-        $daftartransaksi = TransaksiPenjualan::where('id_users',$iduser)->with('detailpenjualan')->get();
+        if($user->role == 'admin'){
+          $daftartransaksi = TransaksiPenjualan::with('detailpenjualan')->orderBy('tanggal','desc')->get();
+        }
+        else{
+          $daftartransaksi = TransaksiPenjualan::where('id_users',$iduser)->with('detailpenjualan')->orderBy('tanggal','desc')->get();
+        }
         $jumlahtransaksi = $daftartransaksi->count();
         $koleksi = collect($daftartransaksi);
         $koleksi->toJson();
@@ -28,7 +35,7 @@ class TransaksiPenjualanController extends Controller
       //USER
       settype($idtrans, "integer");
       //Seleksi transaksi 
-      $transaksi = TransaksiPenjualan::where('id',$idtrans)->get();
+      $transaksi = TransaksiPenjualan::where('id',$idtrans)->with('alamat')->get();
       $jumlahtransaksi = $transaksi->count();
       $koleksi = collect($transaksi);
       $koleksi->toJson();
@@ -91,15 +98,15 @@ class TransaksiPenjualanController extends Controller
     }
     public function saveconfirmation(Request $request){
       $input = $request->all();
-      $idtrans = $request->id_transaksipenjualan;
+      $idtrans = $request->id;
       settype($iduser, "integer");
       
       $transaksi = TransaksiPenjualan::findOrFail($idtrans);
-      $transaksi->status = "konfirm";
+      $transaksi->status = "proses";
       $transaksi->update();
       
-      $createconfirmation = Konfirmasi::create($input);
-	    return $createconfirmation;
+      //$createconfirmation = Konfirmasi::create($input);
+	    return $transaksi;
     }
     public function scrape($asal, $tujuan, $berat, $kurir){
     for($a=1; $a < 502; $a++){

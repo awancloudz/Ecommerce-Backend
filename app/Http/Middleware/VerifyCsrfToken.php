@@ -13,12 +13,18 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         'productlist',
+        'productlist/edit',
+        'productlist/kategori',
+        'productlist/cari',
+        'productlist/hapus',
         'cartlist',
         'cartlist/hapus',
         'userlogin',
         'user',
         'user/address',
         'citylist',
-        'transaction'
+        'transaction',
+        'transaction/confirmation',
+        'profile',
     ];
 }

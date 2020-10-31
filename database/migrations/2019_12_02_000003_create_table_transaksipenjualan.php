@@ -24,7 +24,7 @@ class CreateTableTransaksipenjualan extends Migration
             $table->double('subtotal');
             $table->string('kurir');
             $table->string('layanan');
-            $table->enum('status',['order','konfirm','proses','kirim','selesai']);
+            $table->enum('status',['order','proses','kirim','selesai']);
             $table->enum('jenis',['retail','grosir']);
             $table->timestamps();
         });

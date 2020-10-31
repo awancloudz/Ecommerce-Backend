@@ -64,6 +64,23 @@ class UserController extends Controller
             return $detailcity;
         }
     }
+    public function detailcity($id){
+        $data = Kota::where('id', $id)->with('provinsi')->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $detailcity = collect($data);
+            $detailcity->toJson();
+            return $detailcity;
+        }
+        else{
+            $data = [
+                 ['id' => null],
+            ];
+            $detailcity = collect($data);
+            $detailcity->toJson();
+            return $detailcity;
+        }
+    }
     public function createuser(Request $request){
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
@@ -83,7 +100,13 @@ class UserController extends Controller
     }
     public function userlist($iduser){
         settype($iduser, "integer");
-        $data = User::where('id', $iduser)->get();
+        $user = User::findOrFail($iduser);
+        if($user->role == 'admin'){
+            $data = User::orderBy('id','desc')->get();
+        }
+        else{
+            $data = User::where('id', $iduser)->get();
+        }
         $jumlah = $data->count();
         if($jumlah > 0){
             $detailuser = collect($data);

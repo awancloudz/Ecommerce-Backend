@@ -12,7 +12,7 @@
 */
 header('Access-Control-Allow-Origin: http://localhost:4200');
 header('Access-Control-Allow-Credentials: true');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
+header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Requested-With, x-xsrf-token');
 
 Route::get('scrape/asal/{asal}/tujuan/{tujuan}/berat/{berat}/kurir/{kurir}', [
@@ -22,6 +22,11 @@ Route::get('transaction/asal/{asal}/tujuan/{tujuan}/berat/{berat}', [
 
 Route::get('productlist', 'ProdukController@index');
 Route::get('productlist/{id}', 'ProdukController@show');
+Route::get('productlist/kategori/{cat}','ProdukController@category');
+Route::post('productlist','ProdukController@store');
+Route::post('productlist/edit','ProdukController@updateproduk');
+Route::post('productlist/cari','ProdukController@cari');
+Route::delete('productlist/hapus/{id}', 'ProdukController@destroy');
 
 Route::get('cartlist/{iduser}', 'KeranjangController@index');
 Route::delete('cartlist/hapus/{id}', 'KeranjangController@destroy');
@@ -39,6 +44,7 @@ Route::delete('user/address/{id}', 'UserController@destroy');
 Route::post('user/address', 'UserController@createaddress');
 
 Route::get('citylist', 'UserController@citylist');
+Route::get('citylist/{id}', 'UserController@detailcity');
 
 Route::get('transaction/{iduser}', 'TransaksiPenjualanController@index');
 Route::get('transaction/view/{idtrans}', 'TransaksiPenjualanController@view');
@@ -47,3 +53,5 @@ Route::get('transaction/checkout/{kode}', 'TransaksiPenjualanController@checkout
 Route::post('transaction', 'TransaksiPenjualanController@save');
 Route::post('transaction/confirmation', 'TransaksiPenjualanController@saveconfirmation');
 
+Route::get('profile', 'ProfileController@index');
+Route::put('profile', 'ProfileController@update');
