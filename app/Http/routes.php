@@ -20,11 +20,17 @@ Route::get('scrape/asal/{asal}/tujuan/{tujuan}/berat/{berat}/kurir/{kurir}', [
 Route::get('transaction/asal/{asal}/tujuan/{tujuan}/berat/{berat}', [
     'as' => 'ongkir', 'uses' => 'TransaksiPenjualanController@ongkir']);
 
+
+Route::get('categorylist', 'ProdukController@categorylist');
+Route::post('categorylist', 'ProdukController@storecategory');
+Route::get('categorylist/{id}', 'ProdukController@showcategory');
+Route::post('categorylist/edit','ProdukController@updatecategory');
+Route::delete('categorylist/hapus/{id}', 'ProdukController@destroycategory');
 Route::get('productlist', 'ProdukController@index');
 Route::get('productlist/{id}', 'ProdukController@show');
 Route::get('productlist/kategori/{cat}','ProdukController@category');
 Route::post('productlist','ProdukController@store');
-Route::post('productlist/edit','ProdukController@updateproduk');
+Route::post('productlist/edit','ProdukController@updateproduct');
 Route::post('productlist/cari','ProdukController@cari');
 Route::delete('productlist/hapus/{id}', 'ProdukController@destroy');
 

@@ -6,13 +6,14 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Produk;
+use App\KategoriProduk;
 use App\FotoProduk;
 use Storage;
 
 class ProdukController extends Controller
 {
     public function index(){
-        $data = Produk::all();
+        $data = Produk::with('fotoproduk')->get();
         $jumlah = $data->count();
         if($jumlah > 0){
             $productlist = collect($data);
@@ -26,6 +27,24 @@ class ProdukController extends Controller
             $productlist = collect($data);
             $productlist->toJson();
             return $productlist;
+        }
+    }
+
+    public function categorylist(){
+        $data = KategoriProduk::all();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $categorylist = collect($data);
+            $categorylist->toJson();
+            return $categorylist;
+        }
+        else{
+            $data = [
+                ['id' => null],
+            ];
+            $categorylist = collect($data);
+            $categorylist->toJson();
+            return $categorylist;
         }
     }
 
@@ -44,6 +63,24 @@ class ProdukController extends Controller
             $productlist = collect($data);
             $productlist->toJson();
             return $productlist;
+        }
+    }
+
+    public function showcategory($id){
+        $data = KategoriProduk::where('link', $id)->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $categorylist = collect($data);
+            $categorylist->toJson();
+            return $categorylist;
+        }
+        else{
+            $data = [
+                ['id' => null],
+            ];
+            $categorylist = collect($data);
+            $categorylist->toJson();
+            return $categorylist;
         }
     }
 
@@ -91,7 +128,20 @@ class ProdukController extends Controller
         return $produk;
     }
 
-    public function updateproduk(Request $request){
+    public function storecategory(Request $request){
+        $input = $request->all();        
+        if($request->hasFile('foto')){
+            $input['foto'] = $this->uploadFotoCategory($request);
+        }
+        else{
+            $input['foto'] = "box-flat.png";
+        }
+        //Simpan Data produk
+        $kategori = KategoriProduk::create($input);
+        return $kategori;
+    }
+
+    public function updateproduct(Request $request){
         $input = $request->all();
         $id = $request->id;
         settype($id, "integer");
@@ -285,6 +335,33 @@ class ProdukController extends Controller
         return $produk;
     }
     
+    public function updatecategory(Request $request){
+        $input = $request->all();
+        $id = $request->id;
+        settype($id, "integer");
+        $kategoriproduk = KategoriProduk::findOrFail($id);
+        $upload_path = 'fotoupload';
+
+        if($request->hasFile('foto')){
+            $this->hapusFotoKategori($kategoriproduk);
+            if($request->file('foto')->isValid()){
+                $foto = $request->file('foto');
+                $ext = $foto->getClientOriginalExtension();
+                $foto_name = "category1" . date('YmdHis'). ".$ext";
+                $request->file('foto')->move($upload_path, $foto_name);
+                //return $foto_name;
+            }
+            //$input['foto'] = $this->uploadFotoedit($request);
+            $input['foto'] = $foto_name;
+        }
+        else{
+            $input['foto'] = $kategoriproduk->foto;
+        }
+
+        $kategoriproduk->update($input);
+        return $kategoriproduk;
+    }
+
     //Upload foto ke direktori lokal
     public function uploadFoto(Request $request){
         $upload_path = 'fotoupload';
@@ -351,6 +428,18 @@ class ProdukController extends Controller
         return false;
     }
 
+    public function uploadFotoCategory(Request $request){
+        $upload_path = 'fotoupload';
+        if($request->file('foto')->isValid()){
+            $foto = $request->file('foto');
+            $ext = $foto->getClientOriginalExtension();
+            $foto_name = "category1" . date('YmdHis'). ".$ext";
+            $request->file('foto')->move($upload_path, $foto_name);
+            return $foto_name;
+        }
+        return false;
+    }
+
     /*public function uploadFotoedit(Request $request){
         $upload_path = 'fotoupload';
         return false;
@@ -391,11 +480,29 @@ class ProdukController extends Controller
         }
     }
 
+    public function hapusFotoKategori(KategoriProduk $kategoriproduk){
+        $exist = Storage::disk('foto')->exists($kategoriproduk->foto);
+        if(isset($kategoriproduk->foto) && $exist){
+           $delete = Storage::disk('foto')->delete($kategoriproduk->foto);
+           if($delete){
+            return true;
+           }
+           return false;
+        }
+    }
+
     public function destroy($id){
         settype($id, "integer");
         $produk = Produk::findOrFail($id);
         $produk->delete();
         return $produk;
+    }
+
+    public function destroycategory($id){
+        settype($id, "integer");
+        $kategoriproduk = KategoriProduk::findOrFail($id);
+        $kategoriproduk->delete();
+        return $kategoriproduk;
     }
 
     public function cari(Request $request){

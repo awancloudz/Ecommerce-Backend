@@ -9,6 +9,7 @@ class Produk extends Model
     protected $table = 'produk';
 
     protected $fillable = [
+        'id_kategoriproduk',
         'kodeproduk',
         'namaproduk',
         'deskripsi',
@@ -33,5 +34,9 @@ class Produk extends Model
     }
     public function fotoproduk(){
         return $this->hasMany('App\FotoProduk', 'id_produk');
+    }
+
+    public function kategoriproduk(){
+        return $this->belongsTo('App\KategoriProduk', 'id_kategoriproduk');
     }
 }
