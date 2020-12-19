@@ -19,7 +19,7 @@ class Produk extends Model
         'berat',
         'hargabeli',
         'hargajual',
-        'hargagrosir',
+        'diskon',
         'dilihat',
         'terjual',
         'created_at',

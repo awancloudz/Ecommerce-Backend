@@ -24,7 +24,7 @@ class CreateTableProduk extends Migration
             $table->integer('berat');
             $table->double('hargabeli');
             $table->double('hargajual');
-            $table->double('hargagrosir');
+            $table->double('diskon');
             $table->integer('dilihat');
             $table->integer('terjual');
             $table->timestamps();

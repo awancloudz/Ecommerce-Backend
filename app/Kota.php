@@ -23,4 +23,7 @@ class Kota extends Model
     public function alamat(){
         return $this->hasMany('App\Alamat', 'id_kota');
     }
+    public function kecamatan(){
+        return $this->hasMany('App\Kecamatan', 'id_kota');
+    }
 }

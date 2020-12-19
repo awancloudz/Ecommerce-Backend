@@ -21,6 +21,7 @@ class TransaksiPenjualan extends Model
         'layanan',
         'status',
         'jenis',
+        'noresi',
         'created_at',
         'updated_at'
     ];

@@ -12,6 +12,8 @@ use App\Produk;
 use App\Ongkir;
 use App\Konfirmasi;
 use App\User;
+use App\Kota;
+use App\Kecamatan;
 
 class TransaksiPenjualanController extends Controller
 {
@@ -96,6 +98,19 @@ class TransaksiPenjualanController extends Controller
 
 	    return $createtransaction;
     }
+
+    public function saveresi(Request $request){
+      $idtrans = $request->id;
+      settype($idtrans, "integer");
+      
+      $transaksi = TransaksiPenjualan::findOrFail($idtrans);
+      $transaksi->noresi = $request->noresi;
+      $transaksi->status = "kirim";
+      $transaksi->update();
+      
+	    return $transaksi;
+    }
+
     public function saveconfirmation(Request $request){
       $input = $request->all();
       $idtrans = $request->id;
@@ -108,6 +123,49 @@ class TransaksiPenjualanController extends Controller
       //$createconfirmation = Konfirmasi::create($input);
 	    return $transaksi;
     }
+
+    public function scrapekecamatan(){
+      $daftarkota = Kota::all();
+      foreach($daftarkota as $kota){
+        $curl = curl_init();
+        curl_setopt_array($curl, array(
+          CURLOPT_URL => "https://ruangapi.com/api/v1/districts?city=". $kota->id ."&id=&q=",
+          CURLOPT_RETURNTRANSFER => true,
+          CURLOPT_ENCODING => "",
+          CURLOPT_MAXREDIRS => 10,
+          CURLOPT_TIMEOUT => 30,
+          CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+          CURLOPT_CUSTOMREQUEST => "GET",
+          CURLOPT_HTTPHEADER => array(
+            "accept: application/json",
+            "authorization: wOMvMSKBVoEgQoVHLwbpbTNJrSJI3GeD6R3sGqTa",
+            "content-type: application/json"
+          ),
+        ));
+
+        $response = curl_exec($curl);
+        $data = json_decode($response, true);
+        $err = curl_error($curl);
+
+        curl_close($curl);
+
+        if ($err) {
+          echo "cURL Error #:" . $err;
+        } else {
+          $kecamatan = array();
+          foreach($data['data']['results'] as $hasil){
+            $kecamatan = New Kecamatan;
+            $kecamatan->id_kota = $kota->id;
+            $kecamatan->namakecamatan =  $hasil['name'];
+            $kecamatan->save();
+            //print_r ($hasil['id'] . " - ");
+            //print_r ("Nama Kecamatan: " . $hasil['name'] . "<br>");
+          }
+          print_r($kota->namakota . " Sukses disimpan!");
+        }
+      }
+    }
+
     public function scrape($asal, $tujuan, $berat, $kurir){
     for($a=1; $a < 502; $a++){
 		//Cek Ongkir
@@ -170,41 +228,115 @@ class TransaksiPenjualanController extends Controller
     }
     
     public function ongkir($asal, $tujuan, $berat){
-      $ongkirnya = Ongkir::where('destination',$tujuan)->get();
-
-      // Weight * Costs
-      $hitung=$berat / 1000;
-      if($hitung==0){
-        $hasil=1;
-      }
-      else
-      {
-        if(strpos($hitung,".")){
-          $split_angka=explode(".",$hitung);
-          if($split_angka[1] < 999){
-            $angka2=1;
-            $hitung=$split_angka[0] + $angka2;
-            $hasil=$hitung;
-          }
+      $curl = curl_init();
+      curl_setopt_array($curl, array(
+        CURLOPT_URL => "https://api.rajaongkir.com/starter/cost",
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_POSTFIELDS => "origin=".$asal."&destination=".$tujuan."&weight=".$berat."&courier=jne",
+        CURLOPT_HTTPHEADER => array(
+        "content-type: application/x-www-form-urlencoded",
+        "key: e200ef6f31f5ba64525f28725d4a980d"
+        ),
+      ));
+      
+      $response = curl_exec($curl);
+      $data = json_decode($response, true);
+      $err = curl_error($curl);
+      curl_close($curl);
+      
+      if ($err) {
+        echo "cURL Error #:" . $err;
+      } 
+      else {
+        // Weight * Costs
+        /*$hitung=$berat / 1000;
+        if($hitung==0){
+          $hasil=1;
         }
         else
         {
-          $hasil=$hitung;	
+          if(strpos($hitung,".")){
+            $split_angka=explode(".",$hitung);
+            if($split_angka[1] < 999){
+              $angka2=1;
+              $hitung=$split_angka[0] + $angka2;
+              $hasil=$hitung;
+            }
+          }
+          else
+          {
+            $hasil=$hitung;	
+          }
+        }*/
+
+        for($i=0; $i < count($data['rajaongkir']['results'][0]['costs']); $i++) {
+          //$totalbiaya = 0;
+          //$totalbiaya = $data['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['value'] * $hasil;
+          $ongkir[] = array(
+          'service' => $data['rajaongkir']['results'][0]['costs'][$i]['service'],
+          'cost' => $data['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['value'],
+          'estimate' => $data['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['etd'],
+          );
         }
+        $dataongkir = collect($ongkir);
+        $dataongkir->toJson();
+        return $dataongkir;
       }
+
+      //$ongkirnya = Ongkir::where('destination',$tujuan)->get();
+
+     
+      /*
       
       // Tampilkan hasil hitung
       foreach($ongkirnya as $ongk){
-        $totalbiaya = 0;
-        $totalbiaya = $ongk->costs * $hasil;
+        
         $ongkir[] = array(
           'service' => $ongk->service,
-          'costs' => $totalbiaya,
+          'cost' => $totalbiaya,
           'estimate' => $ongk->estimate,
         );
       }
       $dataongkir = collect($ongkir);
 		  $dataongkir->toJson();
-      return $dataongkir;
+      return $dataongkir;*/
     }
+
+    public function cari(Request $request){
+      $kata_kunci = $request->input('kodetransaksi');
+      $iduser = $request->input('id_users');
+      settype($iduser, "integer");
+      $user = User::findOrFail($iduser);
+      //Seleksi transaksi 
+      if($user->role == 'admin'){
+        $data = TransaksiPenjualan::where(function($query) use ($kata_kunci) {
+          $query->where('kodetransaksi', 'LIKE', '%'.$kata_kunci.'%');
+        })->with('detailpenjualan')->orderBy('tanggal', 'desc')->get();
+      }
+      else{
+        $data = TransaksiPenjualan::where('id_users',$iduser)->where(function($query) use ($kata_kunci) {
+          $query->where('kodetransaksi', 'LIKE', '%'.$kata_kunci.'%');
+        })->with('detailpenjualan')->orderBy('tanggal', 'desc')->get();
+      }
+          
+      $jumlah = $data->count();
+      if($jumlah > 0){
+          $transaksi = collect($data);
+          $transaksi->toJson();
+          return $transaksi;
+      }
+      else{
+          $data = [
+              ['id' => null],
+          ];
+          $transaksi = collect($data);
+          $transaksi->toJson();
+          return $transaksi;
+      }
+  }
 }

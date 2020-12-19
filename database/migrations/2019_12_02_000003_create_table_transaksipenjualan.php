@@ -26,6 +26,7 @@ class CreateTableTransaksipenjualan extends Migration
             $table->string('layanan');
             $table->enum('status',['order','proses','kirim','selesai']);
             $table->enum('jenis',['retail','grosir']);
+            $table->string('noresi');
             $table->timestamps();
         });
         Schema::table('detailpenjualan', function(Blueprint $table) {

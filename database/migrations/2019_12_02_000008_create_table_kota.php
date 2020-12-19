@@ -25,6 +25,13 @@ class CreateTableKota extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
         });
+        Schema::table('kecamatan', function(Blueprint $table) {
+            $table->foreign('id_kota')
+                ->references('id')
+                ->on('kota')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+        });
     }
 
     /**
@@ -36,6 +43,9 @@ class CreateTableKota extends Migration
     {
         Schema::table('alamat', function(Blueprint $table) {
             $table->dropForeign('alamat_id_kota_foreign');
+        });
+        Schema::table('kecamatan', function(Blueprint $table) {
+            $table->dropForeign('kecamatan_id_kota_foreign');
         });
         Schema::drop('kota');
     }

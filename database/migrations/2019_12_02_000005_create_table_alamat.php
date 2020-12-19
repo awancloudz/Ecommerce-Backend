@@ -16,6 +16,7 @@ class CreateTableAlamat extends Migration
             $table->increments('id');
             $table->integer('id_users')->unsigned();
             $table->integer('id_kota')->unsigned();
+            $table->integer('id_kecamatan')->unsigned();
             $table->string('namaalamat');
             $table->string('nama');
             $table->text('alamat');

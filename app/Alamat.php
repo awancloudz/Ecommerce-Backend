@@ -11,6 +11,7 @@ class Alamat extends Model
     protected $fillable = [
         'id_users', 
         'id_kota', 
+        'id_kecamatan',
         'namaalamat',
         'nama',
         'alamat',
@@ -25,6 +26,9 @@ class Alamat extends Model
 
     public function kota(){
         return $this->belongsTo('App\Kota', 'id_kota');
+    }
+    public function kecamatan(){
+        return $this->belongsTo('App\Kecamatan', 'id_kecamatan');
     }
     public function user(){
         return $this->belongsTo('App\User', 'id_users');

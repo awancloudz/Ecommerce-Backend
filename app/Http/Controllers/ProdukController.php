@@ -13,7 +13,43 @@ use Storage;
 class ProdukController extends Controller
 {
     public function index(){
-        $data = Produk::with('fotoproduk')->get();
+        $data = Produk::with('fotoproduk')->orderBy('id','desc')->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $productlist = collect($data);
+            $productlist->toJson();
+            return $productlist;
+        }
+        else{
+            $data = [
+                ['id' => null],
+            ];
+            $productlist = collect($data);
+            $productlist->toJson();
+            return $productlist;
+        }
+    }
+
+    public function indexsorting($id){
+        if($id == "default"){
+            $data = Produk::with('fotoproduk')->orderBy('id','asc')->get();
+        }
+        else if($id == "popular"){
+            $data = Produk::with('fotoproduk')->orderBy('dilihat','desc')->get();
+        }
+        else if($id == "rating"){
+            $data = Produk::with('fotoproduk')->orderBy('terjual','desc')->get();
+        }
+        else if($id == "latest"){
+            $data = Produk::with('fotoproduk')->orderBy('id','desc')->get();
+        }
+        else if($id == "lowtohigh"){
+            $data = Produk::with('fotoproduk')->orderBy('hargajual','asc')->get();
+        }
+        else if($id == "hightolow"){
+            $data = Produk::with('fotoproduk')->orderBy('hargajual','desc')->get();
+        }
+
         $jumlah = $data->count();
         if($jumlah > 0){
             $productlist = collect($data);
@@ -49,7 +85,7 @@ class ProdukController extends Controller
     }
 
     public function show($id){
-        $data = Produk::where('link', $id)->with('fotoproduk')->get();
+        $data = Produk::where('link', $id)->with('fotoproduk')->with('kategoriproduk')->get();
         $jumlah = $data->count();
         if($jumlah > 0){
             $productlist = collect($data);
@@ -505,14 +541,50 @@ class ProdukController extends Controller
         return $kategoriproduk;
     }
 
+    public function destroyfoto($id){
+        settype($id, "integer");
+        $fotoproduk = FotoProduk::findOrFail($id);
+        $exist = Storage::disk('foto')->exists($fotoproduk->foto);
+        if(isset($fotoproduk->foto) && $exist){
+           $delete = Storage::disk('foto')->delete($fotoproduk->foto);
+           if($delete){
+            return true;
+           }
+           return false;
+        }
+        $fotoproduk->delete();
+        return $fotoproduk;
+    }
+
     public function cari(Request $request){
         $kata_kunci = $request->input('kodeproduk');
         //Query
         $data = Produk::where(function($query) use ($kata_kunci) {
             $query->where('kodeproduk', 'LIKE', '%'.$kata_kunci.'%')
-            ->orWhere('namaproduk', 'LIKE', '%'.$kata_kunci.'%')
-            ->orWhere('seriproduk', 'LIKE', '%'.$kata_kunci.'%');
-        })->with('merk')->with('kategoriproduk')->orderBy('id_merk', 'asc')->get();
+            ->orWhere('namaproduk', 'LIKE', '%'.$kata_kunci.'%');
+        })->with('fotoproduk')->orderBy('id', 'asc')->get();
+            
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $produk = collect($data);
+            $produk->toJson();
+            return $produk;
+        }
+        else{
+            $data = [
+                ['id' => null],
+            ];
+            $produk = collect($data);
+            $produk->toJson();
+            return $produk;
+        }
+    }
+    public function caricategory(Request $request){
+        $kata_kunci = $request->input('nama');
+        //Query
+        $data = KategoriProduk::where(function($query) use ($kata_kunci) {
+            $query->where('nama', 'LIKE', '%'.$kata_kunci.'%');
+        })->orderBy('id', 'asc')->get();
             
         $jumlah = $data->count();
         if($jumlah > 0){

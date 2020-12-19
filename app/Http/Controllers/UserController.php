@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\User;
 use Hash;
+use App\Kecamatan;
 use App\Kota;
 use App\Provinsi;
 use App\Alamat;
@@ -81,6 +82,40 @@ class UserController extends Controller
             return $detailcity;
         }
     }
+    public function districtlist(){
+        $data = Kecamatan::with('kota')->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $detaildistrict = collect($data);
+            $detaildistrict->toJson();
+            return $detaildistrict;
+        }
+        else{
+            $data = [
+                 ['id' => null],
+            ];
+            $detaildistrict = collect($data);
+            $detaildistrict->toJson();
+            return $detaildistrict;
+        }
+    }
+    public function detaildistrict($id){
+        $data = Kecamatan::where('id_kota', $id)->with('kota')->get();
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $detaildistrict = collect($data);
+            $detaildistrict->toJson();
+            return $detaildistrict;
+        }
+        else{
+            $data = [
+                 ['id' => null],
+            ];
+            $detaildistrict = collect($data);
+            $detaildistrict->toJson();
+            return $detaildistrict;
+        }
+    }
     public function createuser(Request $request){
         $input = $request->all();
         $input['password'] = bcrypt($input['password']);
@@ -122,9 +157,33 @@ class UserController extends Controller
             return $detailuser;
         }
     }
+    public function cari(Request $request){
+        $kata_kunci = $request->input('nama');
+        //Query
+        $data = User::where(function($query) use ($kata_kunci) {
+            $query->where('nama', 'LIKE', '%'.$kata_kunci.'%')
+            ->orWhere('email', 'LIKE', '%'.$kata_kunci.'%')
+            ->orWhere('nohp', 'LIKE', '%'.$kata_kunci.'%');
+        })->orderBy('id', 'desc')->get();
+            
+        $jumlah = $data->count();
+        if($jumlah > 0){
+            $user = collect($data);
+            $user->toJson();
+            return $user;
+        }
+        else{
+            $data = [
+                ['id' => null],
+            ];
+            $user = collect($data);
+            $user->toJson();
+            return $user;
+        }
+    }
     public function addresslist($iduser){
         settype($iduser, "integer");
-        $data = Alamat::where('id_users', $iduser)->with('kota')->orderBy('utama')->get();
+        $data = Alamat::where('id_users', $iduser)->with('kecamatan')->with('kota')->orderBy('utama')->get();
         $jumlah = $data->count();
         if($jumlah > 0){
             $detailalamat = collect($data);
@@ -142,7 +201,7 @@ class UserController extends Controller
     }
     public function addressmain($iduser){
         settype($iduser, "integer");
-        $data = Alamat::where('id_users', $iduser)->where('utama', 1)->with('kota')->get();
+        $data = Alamat::where('id_users', $iduser)->where('utama', 1)->with('kecamatan')->with('kota')->get();
         $jumlah = $data->count();
         if($jumlah > 0){
             $detailalamat = collect($data);
